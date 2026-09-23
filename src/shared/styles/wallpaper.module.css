@@ -1,0 +1,24 @@
+.root {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--bg);
+}
+
+.root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  height: 100%;
+  pointer-events: none;
+  background: var(--wallpaper);
+  -webkit-mask: url('../../assets/background_mask.svg');
+  mask: url('../../assets/background_mask.svg');
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+
+.root > * {
+  position: relative;
+  z-index: 1;
+}

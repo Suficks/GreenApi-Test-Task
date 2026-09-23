@@ -1,0 +1,37 @@
+.page {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+  padding: 24px;
+}
+
+.card {
+  width: min(100%, 400px);
+  padding: 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.card :global(form) {
+  text-align: left;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  margin: 12px 0 6px;
+  font-size: 28px;
+  letter-spacing: 0.4px;
+}
+
+.subtitle {
+  margin: 0 0 24px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
