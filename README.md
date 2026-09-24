@@ -1,75 +1,77 @@
-# React + TypeScript + Vite
+# MAX — мессенджер на GREEN-API
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Веб-приложение для переписки в MAX через [GREEN-API](https://green-api.com). Интерфейс похож на мессенджер: список чатов слева, переписка справа.
 
-Currently, two official plugins are available:
+Проверяющий входит **своими** данными инстанса GREEN-API. В репозитории нет `idInstance` и `apiTokenInstance`, и подставлять чужие значения не нужно.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Что умеет
 
-## React Compiler
+- Вход по `idInstance` и `apiTokenInstance`. Перед входом приложение проверяет статус инстанса через `getStateInstance`.
+- Создание чата по номеру телефона.
+- Отправка текстовых сообщений (`sendMessage`).
+- Приём входящих текстовых сообщений через long polling (`receiveNotification` / `deleteNotification`).
+- Выход из аккаунта.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+История чатов хранится только в памяти вкладки. После обновления страницы список сообщений пустой, а данные инстанса остаются в `localStorage` браузера (`greenapi.instance`), пока пользователь не нажмёт «Выйти».
 
-## Expanding the ESLint configuration
+## Стек
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 19, TypeScript
+- Vite
+- CSS Modules
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Запросы к GREEN-API идут на `/green-api`. В режиме разработки Vite проксирует их на `https://api.green-api.com`, чтобы обойти CORS.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Требования
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20 или новее
+- npm
+- Собственный инстанс GREEN-API для MAX в статусе `authorized`
 
+## Как получить данные для входа
+
+1. Зарегистрируйтесь в [личном кабинете GREEN-API](https://console.green-api.com).
+2. Создайте инстанс для MAX.
+3. Авторизуйте аккаунт MAX (QR-код или способ, который предлагает кабинет).
+4. Скопируйте `idInstance` и `apiTokenInstance` со страницы инстанса.
+
+Эти два значения вводятся на экране входа. Каждый запускает приложение со своим инстансом: сообщения уходят и приходят в тот аккаунт MAX, который привязан к введённому инстансу.
+
+## Запуск
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Откройте адрес, который Vite напечатает в терминале (обычно `http://localhost:5173`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. На экране входа вставьте свои `idInstance` и `apiTokenInstance`.
+2. Нажмите «Войти». Если инстанс не авторизован, приложение покажет подсказку.
+3. Введите номер телефона собеседника и нажмите «Создать чат».
+4. Напишите сообщение. Входящие с этого номера появятся в том же чате.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Номер можно вводить с `+7`, с `8` или только цифрами. Для России `8XXXXXXXXXX` приводится к `7XXXXXXXXXX`.
 
+## Скрипты
+
+| Команда | Назначение |
+| --- | --- |
+| `npm run dev` | Режим разработки с прокси к GREEN-API |
+| `npm run build` | Проверка типов и production-сборка |
+| `npm run preview` | Просмотр собранных файлов |
+| `npm run lint` | ESLint |
+
+Для проверки переписки используйте `npm run dev`: прокси к API настроен только у dev-сервера.
+
+## Структура
+
+```
+src/
+  app/            — корневой компонент и стили
+  pages/          — экран входа и экран мессенджера
+  widgets/        — список чатов и окно переписки
+  features/       — вход, создание чата, отправка сообщения
+  entities/       — инстанс, чат, сообщение
+  shared/         — клиент GREEN-API и общие UI-компоненты
 ```
