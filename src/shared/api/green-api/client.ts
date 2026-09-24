@@ -58,7 +58,7 @@ export function createGreenApiClient(credentials: InstanceCredentials) {
         signal,
       })
     },
-    receiveNotification(timeout = 25, signal?: AbortSignal) {
+    receiveNotification(timeout = 15, signal?: AbortSignal) {
       return request<GreenApiNotification>(
         `${instancePath(credentials, 'receiveNotification')}?receiveTimeout=${timeout}`,
         { signal },

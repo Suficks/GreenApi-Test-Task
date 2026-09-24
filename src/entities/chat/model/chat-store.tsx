@@ -105,7 +105,7 @@ export function ChatProvider({
 
       while (!stopped) {
         try {
-          const notification = await api.receiveNotification(25, controller.signal)
+          const notification = await api.receiveNotification(15, controller.signal)
 
           if (stopped) {
             return
