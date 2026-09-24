@@ -53,6 +53,16 @@
   color: var(--text-muted);
 }
 
+.day {
+  align-self: center;
+  margin: 4px 0 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
 .bubble {
   max-width: min(72%, 520px);
   padding: 10px 12px 6px;

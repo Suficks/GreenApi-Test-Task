@@ -4,44 +4,52 @@ import { Button } from '@/shared/ui/button'
 import styles from './MessageComposer.module.css'
 
 export function MessageComposer() {
-  const { sendMessage } = useChatStore()
+  const { sendMessage, isSending, sendError } = useChatStore()
   const [text, setText] = useState('')
 
-  const submit = () => {
+  const submit = async () => {
     const next = text.trim()
 
-    if (!next) {
+    if (!next || isSending) {
       return
     }
 
-    sendMessage(next)
-    setText('')
+    try {
+      await sendMessage(next)
+      setText('')
+    } catch {
+      return
+    }
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    submit()
+    void submit()
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault()
-      submit()
+      void submit()
     }
   }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <textarea
-        className={styles.input}
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Сообщение"
-        rows={1}
-      />
-      <Button type="submit" disabled={!text.trim()}>
-        Отправить
+      <div className={styles.field}>
+        <textarea
+          className={styles.input}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Сообщение"
+          rows={1}
+          disabled={isSending}
+        />
+        {sendError ? <p className={styles.error}>{sendError}</p> : null}
+      </div>
+      <Button type="submit" disabled={!text.trim() || isSending}>
+        {isSending ? '...' : 'Отправить'}
       </Button>
     </form>
   )

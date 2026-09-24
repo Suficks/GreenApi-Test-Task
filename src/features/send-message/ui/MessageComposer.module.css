@@ -6,8 +6,13 @@
   background: var(--surface);
 }
 
-.input {
+.field {
   flex: 1;
+  min-width: 0;
+}
+
+.input {
+  width: 100%;
   resize: none;
   min-height: 44px;
   max-height: 120px;
@@ -21,4 +26,10 @@
 
 .input:focus {
   border-color: var(--accent);
+}
+
+.error {
+  margin: 6px 0 0;
+  color: var(--danger);
+  font-size: 12px;
 }

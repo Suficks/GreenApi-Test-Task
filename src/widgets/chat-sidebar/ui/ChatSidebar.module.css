@@ -106,3 +106,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.time {
+  flex-shrink: 0;
+}

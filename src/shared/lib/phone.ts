@@ -26,3 +26,11 @@ export function formatPhone(value: string) {
 
   return phone ? `+${phone}` : ''
 }
+
+export function toApiChatId(phone: string) {
+  return `${normalizePhone(phone)}@c.us`
+}
+
+export function fromApiChatId(chatId: string) {
+  return normalizePhone(chatId.replace(/@c\.us$/i, ''))
+}

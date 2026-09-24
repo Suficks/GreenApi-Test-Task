@@ -9,4 +9,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      '/green-api': {
+        target: 'https://api.green-api.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/green-api/, ''),
+        timeout: 60_000,
+      },
+    },
+  },
 })

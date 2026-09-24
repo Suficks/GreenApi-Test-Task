@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import { useChatStore } from '@/entities/chat'
 import { MessageComposer } from '@/features/send-message'
 import { formatPhone } from '@/shared/lib/phone'
-import { formatTime } from '@/shared/lib/time'
+import { formatDayLabel, formatTime, isSameDay } from '@/shared/lib/time'
 import wallpaper from '@/shared/styles/wallpaper.module.css'
 import { Avatar } from '@/shared/ui/avatar'
 import { Logo } from '@/shared/ui/logo'
@@ -39,18 +39,27 @@ export function ChatWindow() {
         {messages.length === 0 ? (
           <p className={styles.hint}>Напишите тестовое сообщение</p>
         ) : (
-          messages.map((message) => (
-            <article
-              key={message.id}
-              className={[
-                styles.bubble,
-                message.direction === 'outgoing' ? styles.outgoing : styles.incoming,
-              ].join(' ')}
-            >
-              <p className={styles.text}>{message.text}</p>
-              <time className={styles.time}>{formatTime(message.timestamp)}</time>
-            </article>
-          ))
+          messages.map((message, index) => {
+            const previous = messages[index - 1]
+            const showDay = !previous || !isSameDay(previous.timestamp, message.timestamp)
+
+            return (
+              <Fragment key={message.id}>
+                {showDay ? (
+                  <time className={styles.day}>{formatDayLabel(message.timestamp)}</time>
+                ) : null}
+                <article
+                  className={[
+                    styles.bubble,
+                    message.direction === 'outgoing' ? styles.outgoing : styles.incoming,
+                  ].join(' ')}
+                >
+                  <p className={styles.text}>{message.text}</p>
+                  <time className={styles.time}>{formatTime(message.timestamp)}</time>
+                </article>
+              </Fragment>
+            )
+          })
         )}
         <div ref={bottomRef} />
       </div>

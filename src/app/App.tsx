@@ -11,7 +11,7 @@ export function App() {
   }
 
   return (
-    <ChatProvider>
+    <ChatProvider credentials={credentials}>
       <MessengerPage />
     </ChatProvider>
   )

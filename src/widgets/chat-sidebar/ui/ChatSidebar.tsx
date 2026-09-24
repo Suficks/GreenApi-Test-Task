@@ -2,7 +2,7 @@ import { useChatStore } from '@/entities/chat'
 import { useAuth } from '@/features/auth'
 import { StartChatForm } from '@/features/start-chat'
 import { formatPhone } from '@/shared/lib/phone'
-import { formatTime } from '@/shared/lib/time'
+import { formatListDate } from '@/shared/lib/time'
 import { Avatar } from '@/shared/ui/avatar'
 import { Button } from '@/shared/ui/button'
 import { Logo } from '@/shared/ui/logo'
@@ -52,7 +52,7 @@ export function ChatSidebar() {
                   <span className={styles.row}>
                     <span className={styles.phone}>{formatPhone(chat.phone)}</span>
                     {chat.lastMessageAt ? (
-                      <time className={styles.time}>{formatTime(chat.lastMessageAt)}</time>
+                      <time className={styles.time}>{formatListDate(chat.lastMessageAt)}</time>
                     ) : null}
                   </span>
                   <span className={styles.preview}>{chat.lastMessage ?? 'Нет сообщений'}</span>
